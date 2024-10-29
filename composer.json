@@ -1,0 +1,21 @@
+{
+    "name": "actirise/wp-plugin",
+    "description": "The publishers' monetization and business intelligence platform.",
+	"type": "wordpress-plugin",
+    "config": {
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "composer/installers": false
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Actirise\\": "./",
+            "ActiriseAdmin\\": "admin/",
+            "ActirisePublic\\": "public/"
+        }
+    },
+	"require": {
+		"php": ">=5.6"
+	}
+}

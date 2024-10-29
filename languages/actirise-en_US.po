@@ -1,0 +1,113 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-10-11T09:39:25+00:00\n"
+"PO-Revision-Date: 2023-10-11T09:39:25+00:00\n"
+"Language: \n"
+
+#. Plugin Name of the plugin
+#. Author of the plugin
+#: actirise.php
+msgid "Actirise"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: actirise.php
+msgid "https://www.actirise.com"
+msgstr ""
+
+#. Description of the plugin
+#: actirise.php
+msgid "The publishers' monetization and business intelligence platform."
+msgstr ""
+
+#: admin/Includes/Ajax.php:228
+msgid "Your settings were not saved correctly: "
+msgstr ""
+
+#: admin/Includes/Ajax.php:435
+#: admin/Includes/Ajax.php:559
+msgid "This identifier does not exist"
+msgstr ""
+
+#: admin/Includes/Core.php:159
+msgid "Settings"
+msgstr ""
+
+#: admin/Includes/Core.php:306
+msgid "Not used"
+msgstr ""
+
+#: admin/Includes/Core.php:310
+msgid "Author"
+msgstr ""
+
+#: admin/Includes/Core.php:314
+msgid "Post"
+msgstr ""
+
+#: admin/Includes/Core.php:317
+#: admin/Includes/Core.php:334
+#: admin/Includes/Core.php:355
+#: admin/Includes/Core.php:376
+#: admin/Includes/Core.php:397
+msgid "ID"
+msgstr ""
+
+#: admin/Includes/Core.php:321
+#: admin/Includes/Core.php:338
+#: admin/Includes/Core.php:359
+#: admin/Includes/Core.php:380
+#: admin/Includes/Core.php:401
+msgid "Slug"
+msgstr ""
+
+#: admin/Includes/Core.php:325
+msgid "Type"
+msgstr ""
+
+#: admin/Includes/Core.php:331
+msgid "Category Level 1"
+msgstr ""
+
+#: admin/Includes/Core.php:342
+#: admin/Includes/Core.php:363
+#: admin/Includes/Core.php:384
+#: admin/Includes/Core.php:405
+msgid "Title"
+msgstr ""
+
+#: admin/Includes/Core.php:346
+#: admin/Includes/Core.php:367
+#: admin/Includes/Core.php:388
+#: admin/Includes/Core.php:409
+msgid "Parent"
+msgstr ""
+
+#: admin/Includes/Core.php:352
+msgid "Category Level 2"
+msgstr ""
+
+#: admin/Includes/Core.php:373
+msgid "Tag Level 1"
+msgstr ""
+
+#: admin/Includes/Core.php:394
+msgid "Tag Level 2"
+msgstr ""
+
+#: admin/Includes/Core.php:430
+msgid "Custom Field"
+msgstr ""
+
+#. translators: %s: link to settings url
+#: admin/views/notice-uuid-setting.php:6
+msgid "Don’t miss to configure your Actirise plugin : <a href=\"%s\">configure it !</a>"
+msgstr ""

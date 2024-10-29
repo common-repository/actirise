@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128px" height="128px" viewBox="0 0 128 128" version="1.1">
+<defs>
+<radialGradient id="radial0" gradientUnits="userSpaceOnUse" cx="0" cy="0" fx="0" fy="0" r="1" gradientTransform="matrix(101.867005,-104.533628,104.533628,101.867005,14.933333,116.8)">
+<stop offset="0" style="stop-color:rgb(0%,57.647059%,99.215686%);stop-opacity:1;"/>
+<stop offset="0.270833" style="stop-color:rgb(35.686275%,44.313725%,100%);stop-opacity:1;"/>
+<stop offset="0.526042" style="stop-color:rgb(58.431373%,43.137255%,100%);stop-opacity:1;"/>
+<stop offset="0.781817" style="stop-color:rgb(94.117647%,40.392157%,84.705882%);stop-opacity:1;"/>
+<stop offset="1" style="stop-color:rgb(100%,44.313725%,44.313725%);stop-opacity:1;"/>
+</radialGradient>
+<clipPath id="clip1">
+  <path d="M 30.832031 56 L 72 56 L 72 97.167969 L 30.832031 97.167969 Z M 30.832031 56 "/>
+</clipPath>
+<clipPath id="clip2">
+  <path d="M 80 47 L 97.167969 47 L 97.167969 97.167969 L 80 97.167969 Z M 80 47 "/>
+</clipPath>
+<clipPath id="clip3">
+  <path d="M 30.832031 30.832031 L 81 30.832031 L 81 48 L 30.832031 48 Z M 30.832031 30.832031 "/>
+</clipPath>
+</defs>
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:url(#radial0);" d="M 34.132812 0 L 93.867188 0 C 112.71875 0 128 15.28125 128 34.132812 L 128 93.867188 C 128 112.71875 112.71875 128 93.867188 128 L 34.132812 128 C 15.28125 128 0 112.71875 0 93.867188 L 0 34.132812 C 0 15.28125 15.28125 0 34.132812 0 Z M 34.132812 0 "/>
+<g clip-path="url(#clip1)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 59.488281 56.429688 L 30.828125 85.09375 L 42.894531 97.160156 L 71.554688 68.5 Z M 59.488281 56.429688 "/>
+</g>
+<g clip-path="url(#clip2)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 80.101562 97.167969 L 80.101562 47.835938 L 97.167969 64.910156 L 97.167969 97.167969 Z M 80.101562 97.167969 "/>
+</g>
+<g clip-path="url(#clip3)" clip-rule="nonzero">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 80.101562 47.898438 L 30.832031 47.898438 L 30.832031 30.832031 L 61.496094 30.832031 Z M 80.101562 47.898438 "/>
+</g>
+</g>
+</svg>
