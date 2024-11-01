@@ -51,11 +51,6 @@ final class Cron {
 				$this->check_presized_div();
 			}
 
-			if ( ! wp_next_scheduled( 'actirise_cron_update_debug_token' ) ) {
-				wp_schedule_event( time(), 'hourly', 'actirise_cron_update_debug_token' );
-				$this->refresh_token();
-			}
-
 			if ( ! wp_next_scheduled( 'actirise_cron_update_fast_cmp' ) ) {
 				wp_schedule_event( time(), 'hourly', 'actirise_cron_update_fast_cmp' );
 				$this->get_fast_cmp();
@@ -80,6 +75,14 @@ final class Cron {
 				if ( get_option( 'actirise-adstxt-active', 'false' ) === 'true' ) {
 					AdsTxt::update_file();
 				}
+			}
+
+			if ( $adsTxt === false ) {
+				Logger::AddLog( 'adstxt get_from_api is false', 'include/cron', 'error' );
+			}
+
+			if ( get_option( 'actirise-adstxt-actirise' ) === $adsTxt ) {
+				Logger::AddLog( 'adstxt are identical', 'include/cron', 'error' );
 			}
 
 			update_option( 'actirise-adstxt-lastupdate', time() );
@@ -140,29 +143,6 @@ final class Cron {
 	}
 
 	/**
-	 * Refresh debug token
-	 *
-	 * @since    2.0.0
-	 * @return void
-	 */
-	public function refresh_token() {
-		/** @var string $last_token */
-		$last_token = get_option( 'actirise-debug-token' );
-		$enabled    = get_option( 'actirise-debug-enabled', '1' ) === '1';
-
-		if ( $enabled === false ) {
-			return;
-		}
-
-		$new_token    = $this->generate_token();
-		$debugUpdated = Debug::update_to_api( $new_token, $last_token );
-
-		if ( $debugUpdated !== false ) {
-			update_option( 'actirise-debug-token', $debugUpdated );
-		}
-	}
-
-	/**
 	 * Get FastCmp stub light
 	 *
 	 * @since    2.3.0
@@ -205,29 +185,6 @@ final class Cron {
 		}
 
 		update_site_option( 'auto_update_plugins', $plugins );
-	}
-
-	/**
-	 * Generate a random token in uuid v4 format
-	 *
-	 * @since    2.0.0
-	 * @return string
-	 */
-	private function generate_token() {
-		$uid = uniqid( '', true );
-		$uid = str_replace( '.', '', $uid );
-
-		$uid = str_shuffle( $uid );
-
-		$uuid = sprintf(
-			'%05s-%05s-%05d-%05d',
-			substr( $uid, 0, 5 ),
-			substr( $uid, 5, 5 ),
-			( hexdec( substr( $uid, 10, 5 ) ) & 0x0fff ) | 0x5000,
-			( hexdec( substr( $uid, 15, 5 ) ) & 0x3fff ) | 0x5000
-		);
-
-		return $uuid;
 	}
 
 	/**

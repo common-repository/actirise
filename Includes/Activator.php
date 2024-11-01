@@ -39,7 +39,6 @@ final class Activator {
 		$cron = new Cron();
 		$cron->update_adstxt();
 		$cron->check_presized_div();
-		$cron->refresh_token();
 		$cron->get_fast_cmp();
 
 		$cron->schedule();

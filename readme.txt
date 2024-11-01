@@ -3,8 +3,8 @@ Contributors: Actirise
 Donate link: 
 Tags: ads, analytics, cmp, ads.txt, monetization
 Requires at least: 4.5
-Tested up to: 6.6.3
-Stable tag: 2.5.4
+Tested up to: 6.7
+Stable tag: 2.5.5
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -86,10 +86,8 @@ You can contact us at [https://sparteo.com/contact](https://sparteo.com/contact)
 
 == Changelog ==
 
-= 2.5.3 =
+= 2.5.5 =
 
 **Fixed**
 
-* Ensured full compatibility with WordPress 6.7
-* Fixed a problem that could, in some cases, override the ads.txt file present if the feature is not active.
-* Fixed an issue in the "Help" tab that prevented the W3 Total Cache tab from functioning properly.
+* Improve diagnostic feature to make sure it's working in every environment

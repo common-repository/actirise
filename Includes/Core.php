@@ -126,7 +126,6 @@ final class Core extends AbstractCore {
 	private function define_cron_hooks() {
 		$this->loader->add_action( 'actirise_cron_update_adstxt', $this->plugin_cron, 'update_adstxt' );
 		$this->loader->add_action( 'actirise_cron_update_presized_div', $this->plugin_cron, 'check_presized_div' );
-		$this->loader->add_action( 'actirise_cron_update_debug_token', $this->plugin_cron, 'refresh_token' );
 		$this->loader->add_action( 'actirise_cron_update_fast_cmp', $this->plugin_cron, 'get_fast_cmp' );
 
 		$this->plugin_cron->schedule();

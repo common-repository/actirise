@@ -17,6 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WP_Error;
 use WP_Filesystem_Base;
+use DateTime;
+use DateTimeZone;
 
 /**
  * Helpers class.
@@ -469,5 +471,47 @@ class Helpers {
 		}
 
 		return is_null( $initialized ) ? false : $initialized;
+	}
+
+	/**
+	 * Generate a random token in uuid v4 format
+	 *
+	 * @since 2.5.5
+	 * @param  string $prefix
+	 * @return string
+	 */
+	public static function generate_token( $prefix = '' ) {
+		$uid = uniqid( '', true );
+		$uid = str_replace( '.', '', $uid );
+
+		$uid = str_shuffle( $uid );
+
+		$uuid = sprintf(
+			'%05s-%05s-%05d-%05d',
+			substr( $uid, 0, 5 ),
+			substr( $uid, 5, 5 ),
+			( hexdec( substr( $uid, 10, 5 ) ) & 0x0fff ) | 0x5000,
+			( hexdec( substr( $uid, 15, 5 ) ) & 0x3fff ) | 0x5000
+		);
+
+		return $prefix . $uuid;
+	}
+
+	/**
+	 * Hash token for API request
+	 *
+	 * @since 2.5.5
+	 * @param string $token
+	 * @return string
+	 */
+	public static function hash_token( $token = '' ) {
+		/** @var string $domain */
+		$domain = self::get_server_details()['host'];
+		/** @var string $datetime */
+		$datetime = ( new DateTime( 'now', new DateTimeZone( 'UTC' ) ) )->format( 'Y-m-d' );
+		/** @var string $concatenated_string */
+		$concatenated_string = $token . $domain . $datetime;
+
+		return md5( $concatenated_string );
 	}
 }

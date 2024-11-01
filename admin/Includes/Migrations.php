@@ -11,7 +11,9 @@
 
 namespace ActiriseAdmin\Includes;
 
+use Actirise\Includes\Helpers;
 use ActirisePublic\Includes\AdsTxt;
+use ActirisePublic\Includes\Debug;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -62,6 +64,9 @@ final class Migrations {
 		),
 		'2.5.3' => array(
 			'actirise_migrate_253',
+		),
+		'2.5.5' => array(
+			'actirise_migrate_255',
 		),
 	);
 
@@ -146,5 +151,16 @@ final class Migrations {
 		delete_option( $this->plugin_name . '-api-lastupdate' );
 
 		wp_clear_scheduled_hook( 'actirise_cron_get_api_version' );
+	}
+
+	/**
+	 * Migrate to version 2.5.5
+	 *
+	 * @since 2.5.5
+	 * @return void
+	 */
+	private function actirise_migrate_255() {
+		delete_option( $this->plugin_name . '-debug-last-update' );
+		wp_clear_scheduled_hook( 'actirise_cron_update_debug_token' );
 	}
 }

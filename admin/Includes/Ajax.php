@@ -930,26 +930,6 @@ final class Ajax {
 
 		update_option( $this->plugin_name . '-debug-enabled', $debug );
 
-		if ( $debug === '1' ) {
-			$this->cron->refresh_token();
-		} else {
-			$token = get_option( $this->plugin_name . '-debug-token' );
-
-			/** @var array<string, string> $args */
-			$args = array(
-				'domain' => rawurlencode( Helpers::get_server_details()['host'] ),
-				'token'  => $token,
-			);
-
-			$response = $this->api->delete( 'api', 'wordpress_tokens', $args );
-
-			if ( is_wp_error( $response ) ) {
-				Logger::AddLog( 'get_adstxt enabled_debug', 'admin/include/ajax', 'Error while deleting token' );
-			}
-
-			delete_option( $this->plugin_name . '-token' );
-		}
-
 		wp_send_json(
 			array(
 				'success' => true,

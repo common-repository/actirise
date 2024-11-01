@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WP_Error;
 use Actirise\Includes\Api;
-use Actirise\Includes\Cron;
 use Actirise\Includes\Helpers;
 use Actirise\Includes\Logger;
 
@@ -64,16 +63,13 @@ final class Debug {
 
 		$request = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : false;
 		$method  = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : false;
-		$cron    = defined( 'ACTIRISE_CRON' ) && ACTIRISE_CRON === 'true';
 		/** @var string $token */
 		$token = get_option( $this->plugin_name . '-debug-token', '' );
 
 		if ( $token !== '' && $request === '/debug' && $method === 'POST' ) {
-			if ( $this->check_token() ) {
+			if ( $this->validate_token() ) {
 				$this->render_debug();
 			}
-		} elseif ( $cron === false ) {
-				$this->check_update();
 		}
 	}
 
@@ -88,9 +84,6 @@ final class Debug {
 		header( 'Content-Type: application/json' );
 		header( 'Actirise: true' );
 		header( 'HTTP/1.1 200 OK' );
-
-		$cron = new Cron();
-		$cron->refresh_token();
 
 		// return empty json
 		wp_send_json_success(
@@ -107,14 +100,6 @@ final class Debug {
 					'language'     => get_bloginfo( 'language' ),
 					'theme'        => $this->get_theme_name(),
 					'pingback_url' => get_bloginfo( 'pingback_url' ),
-					'feed'         => array(
-						'atom_url'          => get_bloginfo( 'atom_url' ),
-						'rdf_url'           => get_bloginfo( 'rdf_url' ),
-						'rss_url'           => get_bloginfo( 'rss_url' ),
-						'rss2_url'          => get_bloginfo( 'rss2_url' ),
-						'comments_atom_url' => get_bloginfo( 'comments_atom_url' ),
-						'comments_rss2_url' => get_bloginfo( 'comments_rss2_url' ),
-					),
 					'plugins'      => $this->get_plugin_info(),
 					'database'     => array(
 						'charset' => $GLOBALS['wpdb']->charset,
@@ -162,6 +147,7 @@ final class Debug {
 						'custom'   => get_option( $this->plugin_name . '-adstxt-custom', array() ),
 						'enabled'  => get_option( $this->plugin_name . '-adstxt-active', 'false' ) === 'true',
 						'update'   => get_option( $this->plugin_name . '-adstxt-update', 'false' ) === 'true',
+						'file'     => get_option( $this->plugin_name . '-adstxt-file', 'false' ),
 					),
 					'presizedDiv' => array(
 						'actirise' => get_option( $this->plugin_name . '-presizeddiv-actirise', array() ),
@@ -178,7 +164,7 @@ final class Debug {
 					'api'         => array(
 						'api_url'     => ACTIRISE_URL_API,
 						'api_url_v2'  => ACTIRISE_URL_API_V2,
-						'api_token'   => get_option( $this->plugin_name . '-settings-analytics-token', '' ),
+						'api_token'   => !empty(get_option( $this->plugin_name . '-settings-analytics-token', '' )) ? true : false,
 						'api_userid'  => get_option( $this->plugin_name . '-settings-analytics-userid', '' ),
 						'currency'    => get_option( $this->plugin_name . '-currency', 'USD' ),
 					),
@@ -202,18 +188,16 @@ final class Debug {
 	}
 
 	/**
-	 * Update token to Actirise API
+	 * Send token to Actirise API
 	 *
-	 * @since 2.0.0
-	 * @param string         $new_token
-	 * @param string|boolean $old_token
-	 * @return bool|string
+	 * @since 2.5.5
+	 * @param string         $token
+	 * @return bool
 	 */
-	public static function update_to_api( $new_token, $old_token ) {
+	public static function send_token_to_api( $token ) {
 		$args = array(
 			'domain'   => rawurlencode( Helpers::get_server_details()['host'] ),
-			'token'    => $new_token,
-			'oldToken' => $old_token === false ? '' : $old_token,
+			'token'    => $token,
 		);
 
 		$api_url  = 'wordpress_tokens';
@@ -221,24 +205,24 @@ final class Debug {
 		$response = $api->post( 'api', $api_url, $args );
 
 		if ( is_wp_error( $response ) ) {
-			Logger::AddLog( 'update_to_api wp error ' . $response->get_error_code(), 'public/include/debug', 'error' );
+			Logger::AddLog( 'send_token_to_api wp error ' . $response->get_error_code(), 'public/include/debug', 'error' );
 
 			return false;
 		}
 
 		if ( ! is_array( $response ) ) {
-			Logger::AddLog( 'update_to_api is not array', 'public/include/debug', 'error' );
+			Logger::AddLog( 'send_token_to_api is not array', 'public/include/debug', 'error' );
 
 			return false;
 		}
 
 		if ( ! isset( $response['token'] ) ) {
-			Logger::AddLog( 'update_to_api is not isset', 'public/include/debug', 'error' );
+			Logger::AddLog( 'send_token_to_api is not isset', 'public/include/debug', 'error' );
 
 			return false;
 		}
 
-		return $response['token'];
+		return true;
 	}
 
 	/**
@@ -337,35 +321,12 @@ final class Debug {
 	}
 
 	/**
-	 * Check if the token is expired
-	 *
-	 * @since 2.0.0
-	 * @return void
-	 */
-	private function check_update() {
-		if ( get_option( $this->plugin_name . '-debug-last-update' ) === false ) {
-			update_option( $this->plugin_name . '-debug-last-update', time() - 3601 );
-		}
-
-		$last_update = get_option( $this->plugin_name . '-debug-last-update' );
-		$now         = time();
-		$diff        = $now - $last_update;
-
-		if ( $diff > 3600 ) {
-			$cron = new Cron();
-			$cron->refresh_token();
-
-			update_option( $this->plugin_name . '-debug-last-update', time() );
-		}
-	}
-
-	/**
 	 * Check if the token is valid
 	 *
 	 * @since 2.0.0
 	 * @return boolean
 	 */
-	private function check_token() {
+	private function validate_token() {
 		$post_data = array(
 			'token' => isset( $_POST['token'] ) ? sanitize_text_field( wp_unslash( $_POST['token'] ) ) : null, // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		);
@@ -380,14 +341,39 @@ final class Debug {
 		$token = $post_data['token'];
 		/** @var string $current_token */
 		$current_token = get_option( $this->plugin_name . '-debug-token', '' );
+		$current_token = Helpers::hash_token( $current_token );
 
 		if ( $token !== $current_token ) {
-			Logger::AddLog( 'check_token token invalide', 'public/include/debug', 'error' );
+			Logger::AddLog( 'validate_token token invalide', 'public/include/debug', 'error' );
 			$error = new WP_Error( '500', 'Token invalid' );
 
 			wp_send_json_error( $error );
 		}
 
 		return true;
+	}
+
+	/**
+	 * Generate and send the token if it doesn't exist
+	 *
+	 * @since    2.5.5
+	 * @return void
+	 */
+	public function check_token() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		/** @var string $token */
+		$token = get_option( $this->plugin_name . '-debug-token', '' );
+
+		if ( $token === '' || substr( $token, 0, 2 ) !== 'V2' ) {
+			$token = Helpers::generate_token( 'V2_' );
+			if ( $this->send_token_to_api( $token ) ) {
+				update_option( $this->plugin_name . '-debug-token', $token );
+			}
+		}
+
+		return;
 	}
 }

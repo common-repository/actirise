@@ -9,7 +9,7 @@
  * Plugin Name:       Actirise
  * Description:       The publishers' monetization and business intelligence platform.
  * Plugin URI:        https://www.actirise.com
- * Version:           2.5.4
+ * Version:           2.5.5
  * Author:            Actirise
  * Author URI:        https://www.actirise.com
  * Disclaimer:        Use at your own risk. No warranty expressed or implied is provided.
@@ -17,7 +17,7 @@
  * Domain Path:       /languages
  * Requires PHP:      > 5.6
  * Requires at least: > 4.5
- * Tested up to:      6.6.2
+ * Tested up to:      6.7
  */
 
 namespace Actirise;
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'ACTIRISE_VERSION' ) ) {
-	define( 'ACTIRISE_VERSION', '2.5.4' );
+	define( 'ACTIRISE_VERSION', '2.5.5' );
 }
 
 if ( ! defined( 'ACTIRISE_FILE' ) ) {

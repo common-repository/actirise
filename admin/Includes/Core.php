@@ -23,6 +23,7 @@ use Actirise\Includes\I18n;
 use ActiriseAdmin\Includes\View;
 use ActiriseAdmin\Includes\Ajax;
 use ActirisePublic\Includes\AdsTxt;
+use ActirisePublic\Includes\Debug;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -77,6 +78,7 @@ final class Core extends AbstractCore {
 
 		$this->register_ajax_event();
 		$this->settings_init();
+		$this->check_debug_token();
 	}
 
 	/**
@@ -204,6 +206,18 @@ final class Core extends AbstractCore {
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
 		$this->i18n = $plugin_i18n;
+	}
+
+	/**
+	 * Add action to check if debug token exists.
+	 *
+	 * @since    2.5.5
+	 * @access   private
+	 * @return   void
+	 */
+	private function check_debug_token() {
+		$debug = new Debug( $this->plugin_name );
+		$this->loader->add_action( 'admin_init', $debug, 'check_token' );
 	}
 
 	/**
